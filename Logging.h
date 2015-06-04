@@ -2,7 +2,7 @@
 #define MUDUO_BASE_LOGGING_H
 
 #include "LogStream.h"
-#include <datetime/Timestamp.h>
+#include "Timestamp.h"
 #include <boost/scoped_ptr.hpp>
 
 namespace muduo
