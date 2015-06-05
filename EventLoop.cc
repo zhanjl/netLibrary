@@ -1,5 +1,7 @@
 #include "EventLoop.h"
 #include "Logging.h"
+#include "Channel.h"
+#include "Poller.h"
 
 #include <assert.h>
 #include <poll.h>
@@ -11,7 +13,7 @@ const int kPollTimeMs = 10000;
 
 EventLoop::EventLoop()
     : looping_(false),
-      threadId_(CurrentThread::tid())
+      threadId_(CurrentThread::tid()),
       quit_(false),
       poller_(new Poller(this))
 {

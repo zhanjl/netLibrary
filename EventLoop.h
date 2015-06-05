@@ -5,8 +5,12 @@
 #include "Thread.h"
 #include <boost/noncopyable.hpp>
 
+#include <vector>
+#include <boost/scoped_ptr.hpp>
 namespace muduo
 {
+    class Channel;
+    class Poller;
     class EventLoop : boost::noncopyable
     {
         public:
@@ -14,7 +18,7 @@ namespace muduo
             ~EventLoop();
 
             void loop();
-
+            void quit();
             void assertInLoopThread()
             {
                 if (!isInLoopThread())
@@ -26,6 +30,8 @@ namespace muduo
             {
                 return threadId_ == CurrentThread::tid();
             }
+
+            void updateChannel(Channel* channel);
         private:
             typedef std::vector<Channel*> ChannelList;
             void abortNotInLoopThread();

@@ -34,7 +34,7 @@ namespace muduo
 
             int fd() const 
             {
-                return fd;
+                return fd_;
             }
 
             int events() const
@@ -47,7 +47,12 @@ namespace muduo
                 revents_ = revt;
             }
 
-            bool isNoneEvent()
+            bool isNoneEvent() const
+            {
+                return events_ == kNoneEvent;
+            }
+
+            void enableReading()
             {
                 events_ |= kReadEvent;
                 update();
