@@ -7,10 +7,13 @@
 using namespace muduo;
 
 __thread EventLoop* t_loopInThisThread = 0;
+const int kPollTimeMs = 10000;
 
 EventLoop::EventLoop()
     : looping_(false),
       threadId_(CurrentThread::tid())
+      quit_(false),
+      poller_(new Poller(this))
 {
     LOG_TRACE << "EventLoop created " << this << " in thread " << threadId_;
 
@@ -37,8 +40,18 @@ void EventLoop::loop()
     assertInLoopThread();
 
     looping_ = true;
+    quit_ = false;
 
-    ::poll(NULL, 0, 5*1000);    //IO多路复用
+    while (!quit_)
+    {
+        activeChannels_.clear();
+        poller_->poll(kPollTimeMs, &activeChannels_);
+        for (ChannelList::iterator it = activeChannels_.begin();
+                it != activeChannels_.end(); it++)
+        {
+            (*it)->handleEvent();
+        }
+    }
 
     LOG_TRACE << "EventLoop " << this << " stop looping";
     looping_ = false;
@@ -49,4 +62,16 @@ void EventLoop::abortNotInLoopThread()
     LOG_FATAL << "EventLoop " << this 
         << " was created in threadId_= " << threadId_
         << ", current thread id = " << CurrentThread::tid();
+}
+
+void EventLoop::quit()
+{
+    quit_ = true;
+}
+
+void EventLoop::updateChannel(Channel* channel)
+{
+    assert(channel->ownerLoop() == this);
+    assertInLoopThread();
+    poller_->updateChannel(channel);
 }

@@ -1,7 +1,7 @@
 #include "Logging.h"
 
-#include <datetime/Timestamp.h>
-#include <thread/Thread.h>
+#include "Timestamp.h"
+#include "Thread.h"
 
 #include <errno.h>
 #include <stdio.h>

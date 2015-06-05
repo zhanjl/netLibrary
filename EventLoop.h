@@ -27,9 +27,14 @@ namespace muduo
                 return threadId_ == CurrentThread::tid();
             }
         private:
+            typedef std::vector<Channel*> ChannelList;
             void abortNotInLoopThread();
             bool looping_;
+            bool quit_;
             const pid_t threadId_;
+
+            boost::scoped_ptr<Poller> poller_;
+            ChannelList activeChannels_;
     };
 }
 
