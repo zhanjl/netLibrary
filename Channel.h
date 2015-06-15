@@ -3,6 +3,7 @@
 
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
+#include <stdio.h>
 
 namespace muduo
 {
@@ -54,6 +55,7 @@ namespace muduo
 
             void enableReading()
             {
+                printf("enter Channel::enableReading()\n");
                 events_ |= kReadEvent;
                 update();
             }

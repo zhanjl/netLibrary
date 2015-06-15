@@ -2,9 +2,11 @@
 #include "Logging.h"
 #include "Channel.h"
 #include "Poller.h"
+#include "TimerQueue.h"
 
 #include <assert.h>
 #include <poll.h>
+#include <stdio.h>
 
 using namespace muduo;
 
@@ -12,10 +14,11 @@ __thread EventLoop* t_loopInThisThread = 0;
 const int kPollTimeMs = 10000;
 
 EventLoop::EventLoop()
-    : looping_(false),
-      threadId_(CurrentThread::tid()),
+      :threadId_(CurrentThread::tid()),
+      looping_(false),
       quit_(false),
-      poller_(new Poller(this))
+      poller_(new Poller(this)),
+      timerQueue_(new TimerQueue(this))
 {
     LOG_TRACE << "EventLoop created " << this << " in thread " << threadId_;
 
@@ -47,7 +50,7 @@ void EventLoop::loop()
     while (!quit_)
     {
         activeChannels_.clear();
-        poller_->poll(kPollTimeMs, &activeChannels_);
+        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
         for (ChannelList::iterator it = activeChannels_.begin();
                 it != activeChannels_.end(); it++)
         {
@@ -76,4 +79,22 @@ void EventLoop::updateChannel(Channel* channel)
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
     poller_->updateChannel(channel);
+}
+
+TimerId EventLoop::runAt(const Timestamp& time, const TimerCallback& cb)
+{
+    return timerQueue_->addTimer(cb, time, 0.0);
+}
+
+
+TimerId EventLoop::runAfter(double delay, const TimerCallback& cb)
+{
+    Timestamp time(addTime(Timestamp::now(), delay));
+    return runAt(time, cb);
+}
+
+TimerId EventLoop::runEvery(double interval, const TimerCallback& cb)
+{
+    Timestamp time(addTime(Timestamp::now(), interval));
+    return timerQueue_->addTimer(cb, time, interval);
 }

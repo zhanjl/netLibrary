@@ -5,13 +5,14 @@
 
 #include <assert.h>
 #include <poll.h>
+#include <stdio.h>
 
 using namespace muduo;
 
 Poller::Poller(EventLoop* loop)
     : ownerLoop_(loop)
 {
-
+    printf("Poller() success\n");
 }
 
 Poller::~Poller()
