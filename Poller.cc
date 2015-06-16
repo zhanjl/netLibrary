@@ -12,7 +12,6 @@ using namespace muduo;
 Poller::Poller(EventLoop* loop)
     : ownerLoop_(loop)
 {
-    printf("Poller() success\n");
 }
 
 Poller::~Poller()

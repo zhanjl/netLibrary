@@ -55,7 +55,6 @@ namespace muduo
 
             void enableReading()
             {
-                printf("enter Channel::enableReading()\n");
                 events_ |= kReadEvent;
                 update();
             }

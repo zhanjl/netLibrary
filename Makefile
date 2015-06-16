@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-Wall -g
-BIN=test6
-OBJS= test6.o EventLoop.o Thread.o Logging.o LogStream.o Timestamp.o Channel.o Poller.o Timer.o TimerQueue.o EventLoopThread.o
+BIN=test
+OBJS= test.o EventLoop.o Thread.o Logging.o LogStream.o Timestamp.o Channel.o Poller.o Timer.o TimerQueue.o EventLoopThread.o Acceptor.o InetAddress.o Socket.o SocketsOps.o
 LIB=-lcrypt -pthread
 $(BIN):$(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIB)
