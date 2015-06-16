@@ -8,8 +8,7 @@
 int main()
 {
     int sockfd, n;
-    char buf[1024];
-
+    char buf[] = "abcdefg";
     struct sockaddr_in  servaddr;
 
     bzero(&servaddr, sizeof servaddr);
@@ -21,8 +20,10 @@ int main()
 
     connect(sockfd, (struct sockaddr*)&servaddr, sizeof servaddr);
 
-    n = read(sockfd, buf, sizeof buf);
+    n = write(sockfd, buf, strlen(buf));
     buf[n] = '\0';
     printf("%s", buf);
+    while (1)
+        ;
     return 0;
 }
