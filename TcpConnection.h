@@ -10,6 +10,7 @@
 
 #include "Callbacks.h"
 #include "InetAddress.h"
+#include "Buffer.h"
 
 #include <boost/any.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -65,7 +66,7 @@ class TcpConnection : boost::noncopyable,
   enum StateE { kConnecting, kConnected, kDisconnected,};
 
   void setState(StateE s) { state_ = s; }
-  void handleRead();
+  void handleRead(Timestamp receiveTime);
   void handleWrite();
   void handleClose();
   void handleError();
@@ -80,6 +81,7 @@ class TcpConnection : boost::noncopyable,
   ConnectionCallback connectionCallback_;
   MessageCallback messageCallback_;
   CloseCallback closeCallback_;
+  Buffer inputBuffer_;
 };
 
 typedef boost::shared_ptr<TcpConnection> TcpConnectionPtr;

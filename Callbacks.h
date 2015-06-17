@@ -9,13 +9,14 @@
 namespace muduo
 {
     class TcpConnection;
+    class Buffer;
     typedef boost::shared_ptr<TcpConnection> TcpConnectionPtr;
     typedef boost::function<void()> TimerCallback;
 
     typedef boost::function<void (const TcpConnectionPtr&)> ConnectionCallback;
     typedef boost::function<void (const TcpConnectionPtr&,
-                                const char* data,
-                                ssize_t len)> MessageCallback;
+                                Buffer *buf,
+                                Timestamp)> MessageCallback;
 
     typedef boost::function<void (const TcpConnectionPtr&)> CloseCallback;
 }

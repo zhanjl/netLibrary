@@ -1,6 +1,8 @@
 #include "TcpServer.h"
 #include "EventLoop.h"
 #include "InetAddress.h"
+#include "Buffer.h"
+#include "Timestamp.h"
 #include <stdio.h>
 
 void onConnection(const muduo::TcpConnectionPtr& conn)
@@ -19,10 +21,14 @@ void onConnection(const muduo::TcpConnectionPtr& conn)
 }
 
 void onMessage(const muduo::TcpConnectionPtr& conn,
-            const char* data, ssize_t len)
+            muduo::Buffer* buf,
+            muduo::Timestamp receiveTime)
 {
-    printf("onMessage(): received %zd bytes from connection [%s]\n",
-            len, conn->name().c_str());
+    printf("onMessage(): received %zd bytes from connection [%s] at %s\n",
+            buf->readableBytes(),
+            conn->name().c_str(),
+            receiveTime.toFormattedString().c_str());
+    printf("onMessage(): [%s]\n", buf->retrieveAsString().c_str());
 }
 
 int main()
