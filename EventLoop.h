@@ -54,6 +54,7 @@ namespace muduo
             void wakeup();
 
             void updateChannel(Channel* channel);
+            void removeChannel(Channel* channel);
         private:
 
             void abortNotInLoopThread();

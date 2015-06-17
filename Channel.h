@@ -16,7 +16,7 @@ namespace muduo
             typedef boost::function<void()> EventCallback;
 
             Channel(EventLoop *loop, int fd);
-
+            ~Channel();
             void handleEvent();
             void setReadCallback(const EventCallback& cb)
             {
@@ -31,6 +31,11 @@ namespace muduo
             void setErrorCallback(const EventCallback& cb)
             {
                 errorCallback_ = cb;
+            }
+            
+            void setCloseCallback(const EventCallback& cb)
+            {
+                closeCallback_ = cb;
             }
 
             int fd() const 
@@ -58,7 +63,11 @@ namespace muduo
                 events_ |= kReadEvent;
                 update();
             }
-
+            void disableAll()
+            {
+                events_ = kNoneEvent;
+                update();
+            }
             int index()
             {
                 return index_;
@@ -86,9 +95,11 @@ namespace muduo
             int revents_;   //返回的事件
             int index_;
 
+            bool eventHandling_;
             EventCallback readCallback_;
             EventCallback writeCallback_;
             EventCallback errorCallback_;
+            EventCallback closeCallback_;
     };
 
 }
