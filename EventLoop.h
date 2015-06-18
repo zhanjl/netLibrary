@@ -16,7 +16,7 @@
 namespace muduo
 {
     class Channel;
-    class Poller;
+    class EPoller;
     class TimerQueue;
     class EventLoop : boost::noncopyable
     {
@@ -67,7 +67,7 @@ namespace muduo
             bool quit_;
             bool callingPendingFunctors_;
 
-            boost::scoped_ptr<Poller> poller_;
+            boost::scoped_ptr<EPoller> poller_;
             boost::scoped_ptr<TimerQueue> timerQueue_;
 
             int wakeupFd_;
