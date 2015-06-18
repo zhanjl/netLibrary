@@ -9,8 +9,22 @@
 #include <stdio.h>
 #include <sys/eventfd.h>
 #include <boost/bind.hpp>
+#include <signal.h>
 
 using namespace muduo;
+
+//忽略SIGPIPE信号
+class IgnoreSigPipe
+{
+    public:
+        IgnoreSigPipe()
+        {
+            signal(SIGPIPE, SIG_IGN);
+        }
+};
+
+IgnoreSigPipe initObj;
+
 
 __thread EventLoop* t_loopInThisThread = 0;
 const int kPollTimeMs = 10000;

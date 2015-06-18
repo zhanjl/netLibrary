@@ -208,3 +208,8 @@ void TcpConnection::handleError()
     LOG_ERROR << "TcpConnection::handleError [" << name_
                 << "] - SO_ERROR = " << err << " " << strerror_tl(err);
 }
+
+void TcpConnection::setTcpNoDelay(bool on)
+{
+    socket_->setTcpNoDelay(on);
+}

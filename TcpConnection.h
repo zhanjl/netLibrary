@@ -64,6 +64,8 @@ class TcpConnection : boost::noncopyable,
   void connectEstablished();   // should be called only once
   
   void connectDestroyed();
+
+  void setTcpNoDelay(bool on);
  private:
   enum StateE { kConnecting, kConnected, kDisconnected, kDisconnecting};
 
