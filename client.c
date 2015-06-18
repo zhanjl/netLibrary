@@ -10,7 +10,7 @@ int main()
     int sockfd, n;
     char buf[] = "abcdefg";
     struct sockaddr_in  servaddr;
-
+    char recv[1024];
     bzero(&servaddr, sizeof servaddr);
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(9981);
@@ -20,10 +20,12 @@ int main()
 
     connect(sockfd, (struct sockaddr*)&servaddr, sizeof servaddr);
 
-    n = write(sockfd, buf, strlen(buf));
-    buf[n] = '\0';
-    printf("%s", buf);
     while (1)
-        ;
+    {
+        write(sockfd, buf, strlen(buf));
+        n = read(sockfd, recv, sizeof recv);
+        recv[n] = '\0';
+        printf("%s", recv);
+    }
     return 0;
 }

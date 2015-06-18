@@ -48,6 +48,8 @@ class TcpConnection : boost::noncopyable,
   const InetAddress& peerAddress() { return peerAddr_; }
   bool connected() const { return state_ == kConnected; }
 
+  void send(const std::string& message);
+  void shutdown();
   void setConnectionCallback(const ConnectionCallback& cb)
   { connectionCallback_ = cb; }
 
@@ -63,13 +65,15 @@ class TcpConnection : boost::noncopyable,
   
   void connectDestroyed();
  private:
-  enum StateE { kConnecting, kConnected, kDisconnected,};
+  enum StateE { kConnecting, kConnected, kDisconnected, kDisconnecting};
 
   void setState(StateE s) { state_ = s; }
   void handleRead(Timestamp receiveTime);
   void handleWrite();
   void handleClose();
   void handleError();
+  void sendInLoop(const std::string& message);
+  void shutdownInLoop();
   EventLoop* loop_;
   std::string name_;
   StateE state_;  // FIXME: use atomic variable
@@ -82,6 +86,7 @@ class TcpConnection : boost::noncopyable,
   MessageCallback messageCallback_;
   CloseCallback closeCallback_;
   Buffer inputBuffer_;
+  Buffer outputBuffer_;
 };
 
 typedef boost::shared_ptr<TcpConnection> TcpConnectionPtr;
